@@ -13,13 +13,19 @@
         .drag-ghost { opacity: 0.5; background: #ebf5ff; }
         .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
         .expanded .collapsible-content { max-height: 1000px; }
+        
+        /* 自定義 1024x753 的比例以確保完美填滿 */
+        .banner-aspect {
+            aspect-ratio: 1024 / 753;
+        }
     </style>
 </head>
 <body class="pb-10">
 
-    <!-- Banner 區域 -->
-    <div class="relative w-full h-64 md:h-80 overflow-hidden bg-gray-200">
-        <img src="2026.jpg" alt="2026 Family Trip Banner" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=640&q=320'">
+    <!-- Banner 區域：修正處 -->
+    <!-- 移除固定高度 h-64/h-80，改用 banner-aspect 或 aspect-video -->
+    <div class="relative w-full banner-aspect md:max-h-[500px] overflow-hidden bg-gray-200">
+        <img src="2026.jpg" alt="2026 Family Trip Banner" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1024&q=80'">
         <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
             <h1 class="text-white text-3xl md:text-5xl font-bold tracking-widest drop-shadow-lg">2026 瀨戶內海旅遊</h1>
         </div>
@@ -82,6 +88,7 @@
 
         function displayWeather(dayId, minT, maxT, code) {
             const container = document.getElementById(`weather-${dayId}`);
+            if (!container) return;
             const icon = getWeatherIcon(code);
             const text = getWeatherText(code);
             const specialAdvice = initialData[dayId].specialTip;
@@ -208,5 +215,3 @@
     </script>
 </body>
 </html>
-
-
