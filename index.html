@@ -14,18 +14,31 @@
         .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
         .expanded .collapsible-content { max-height: 1000px; }
         
-        /* 自定義 1024x753 的比例以確保完美填滿 */
-        .banner-aspect {
-            aspect-ratio: 1024 / 753;
+        /* 自定義 Banner 比例控制 */
+        .banner-container {
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            /* 手機版使用較高的比例 (4:3) 以填滿視覺感 */
+            aspect-ratio: 4 / 3;
+        }
+
+        @media (min-width: 768px) {
+            .banner-container {
+                /* 電腦版回歸原始 1024:753 比例 */
+                aspect-ratio: 1024 / 753;
+                max-height: 500px; /* 限制大螢幕下不要過高 */
+            }
         }
     </style>
 </head>
 <body class="pb-10">
 
-    <!-- Banner 區域：修正處 -->
-    <!-- 移除固定高度 h-64/h-80，改用 banner-aspect 或 aspect-video -->
-    <div class="relative w-full banner-aspect md:max-h-[500px] overflow-hidden bg-gray-200">
-        <img src="2026.jpg" alt="2026 Family Trip Banner" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1024&q=80'">
+    <!-- Banner 區域：優化填滿效果 -->
+    <div class="banner-container bg-gray-200">
+        <img src="2026.jpg" alt="2026 Family Trip Banner" 
+             class="absolute inset-0 w-full h-full object-cover object-center" 
+             onerror="this.src='https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1024&q=80'">
         <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
             <h1 class="text-white text-3xl md:text-5xl font-bold tracking-widest drop-shadow-lg">2026 瀨戶內海旅遊</h1>
         </div>
@@ -50,7 +63,7 @@
             { date: "2026-02-14", day: "Day 4", city: "廣島", location: "Hiroshima", mainPath: "廣島", items: ["原爆圓頂", "和平紀念公園", "廣島城"], specialTip: "市區步行行程較多，建議穿著好走的鞋子。" },
             { date: "2026-02-15", day: "Day 5", city: "大久野島", location: "Takehara", mainPath: "大久野島、竹原", items: ["兔子島", "竹原街景保存地區"], specialTip: "大久野島環島步行且空曠，建議備好手套與暖暖包，餵兔子時手部較容易冷。" },
             { date: "2026-02-16", day: "Day 6", city: "尾道", location: "Onomichi", mainPath: "尾道、鞆之浦", items: ["千光寺", "貓之細道", "鞆之浦"], specialTip: "千光寺纜車與展望台地勢較高，山頂風大，要注意頭部保暖。" },
-            { date: "2026-02-17", day: "Day 7", city: "豐島・直島", location: "Naoshima", mainPath: "豐島・直島", items: ["豐島美術館", "針工廠", "ANDO MUSEUM", "李禹煥美術館"], specialTip: "島上移動多依賴接駁車或步行，海邊溫差大，建議採用洋蔥式穿法。" },
+            { date: "2026-02-17", day: "Day 7", city: "豐島・直島", location: "Naoshima", mainPath: "豐島・直島", items: ["豐島美術館", "針工廠", "ANDO MUSEUM", "李禹煥美術館"], specialTip: "島上移動多依賴接駁車 or 步行，海邊溫差大，建議採用洋蔥式穿法。" },
             { date: "2026-02-18", day: "Day 8", city: "倉敷", location: "Kurashiki", mainPath: "倉敷、吉備津", items: ["倉敷美觀地區", "吉備津神社","瀨戶大橋","鷲羽山"], specialTip: "鷲羽山看瀨戶大橋風勢極強，建議帽子需有束帶避免被吹走。" },
             { date: "2026-02-19", day: "Day 9", city: "姬路、備前、神戶", location: "Himeji", mainPath: "姬路、備前、神戶", items: ["明石海峽大橋", "摩耶山掬星台","舊閑谷學校","天津神社"], specialTip: "摩耶山夜景海拔高且夜晚極冷，請穿著最厚實的保暖衣物與外套。" },
             { date: "2026-02-20", day: "Day 10", city: "神戶", location: "Kobe", mainPath: "神戶", items: ["神戶舊居留地"], specialTip: "神戶港邊建築間常有強勁切風，長圍巾是防風好幫手。" },
@@ -58,31 +71,19 @@
         ];
 
         const cityCoords = {
-            "Osaka": [34.69, 135.50],
-            "Shimonoseki": [33.95, 130.94],
-            "Hatsukaichi": [34.35, 132.33],
-            "Hiroshima": [34.38, 132.45],
-            "Takehara": [34.34, 132.91],
-            "Onomichi": [34.40, 133.20],
-            "Kurashiki": [34.58, 133.77],
-            "Naoshima": [34.45, 133.99],
-            "Himeji": [34.81, 134.69],
+            "Osaka": [34.69, 135.50], "Shimonoseki": [33.95, 130.94], "Hatsukaichi": [34.35, 132.33],
+            "Hiroshima": [34.38, 132.45], "Takehara": [34.34, 132.91], "Onomichi": [34.40, 133.20],
+            "Kurashiki": [34.58, 133.77], "Naoshima": [34.45, 133.99], "Himeji": [34.81, 134.69],
             "Kobe": [34.69, 135.18]
         };
 
         function getWeatherIcon(code) {
-            const map = {
-                0: 'sun', 1: 'cloud-sun', 2: 'cloud', 3: 'cloud',
-                45: 'cloud-fog', 51: 'cloud-rain', 61: 'cloud-rain', 71: 'snowflake'
-            };
+            const map = { 0: 'sun', 1: 'cloud-sun', 2: 'cloud', 3: 'cloud', 45: 'cloud-fog', 51: 'cloud-rain', 61: 'cloud-rain', 71: 'snowflake' };
             return map[code] || 'cloud';
         }
 
         function getWeatherText(code) {
-            const map = {
-                0: '晴朗', 1: '晴時多雲', 2: '多雲', 3: '陰天',
-                45: '有霧', 51: '毛毛雨', 61: '陣雨', 71: '小雪'
-            };
+            const map = { 0: '晴朗', 1: '晴時多雲', 2: '多雲', 3: '陰天', 45: '有霧', 51: '毛毛雨', 61: '陣雨', 71: '小雪' };
             return map[code] || '天氣穩定';
         }
 
@@ -110,26 +111,15 @@
 
         async function fetchWeatherWithRetry(lat, lon, dayId, retries = 5, delay = 1000) {
             const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=Asia%2FTokyo`;
-            
             for (let i = 0; i < retries; i++) {
                 try {
                     const response = await fetch(url);
-                    if (!response.ok) throw new Error('Network response was not ok');
                     const data = await response.json();
-                    
-                    const code = data.daily.weathercode[0];
-                    const maxT = Math.round(data.daily.temperature_2m_max[0]);
-                    const minT = Math.round(data.daily.temperature_2m_min[0]);
-                    
-                    displayWeather(dayId, minT, maxT, code);
+                    displayWeather(dayId, Math.round(data.daily.temperature_2m_min[0]), Math.round(data.daily.temperature_2m_max[0]), data.daily.weathercode[0]);
                     return;
                 } catch (e) {
-                    if (i === retries - 1) {
-                        displayWeather(dayId, 3, 10, 2); 
-                    } else {
-                        await new Promise(res => setTimeout(res, delay));
-                        delay *= 2;
-                    }
+                    if (i === retries - 1) displayWeather(dayId, 3, 10, 2);
+                    else { await new Promise(res => setTimeout(res, delay)); delay *= 2; }
                 }
             }
         }
@@ -137,12 +127,9 @@
         function renderApp() {
             const list = document.getElementById('itinerary-list');
             list.innerHTML = '';
-
             initialData.forEach((day, index) => {
                 const dayCard = document.createElement('div');
                 dayCard.className = "bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden day-card";
-                dayCard.id = `day-${index}`;
-                
                 dayCard.innerHTML = `
                     <div class="p-4 cursor-pointer hover:bg-gray-50 flex flex-col md:flex-row md:items-center justify-between gap-4" onclick="this.parentElement.classList.toggle('expanded')">
                         <div class="flex items-start gap-4">
@@ -159,14 +146,13 @@
                             <div class="animate-pulse bg-gray-100 h-16 rounded-lg"></div>
                         </div>
                     </div>
-                    
                     <div class="collapsible-content bg-gray-50 border-t border-gray-100">
                         <div class="p-4">
                             <div class="flex justify-between items-center mb-3">
                                 <span class="text-sm font-bold text-gray-600">建議景點 (可拖曳排序)</span>
                                 <button onclick="event.stopPropagation(); addItem(${index})" class="text-xs bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600">+ 新增景點</button>
                             </div>
-                            <ul id="list-${index}" class="space-y-2 sortable-list">
+                            <ul id="list-${index}" class="space-y-2">
                                 ${day.items.map((item, i) => `
                                     <li class="flex items-center justify-between bg-white p-3 rounded border border-gray-200 shadow-sm group">
                                         <div class="flex items-center gap-3 flex-1">
@@ -183,34 +169,20 @@
                     </div>
                 `;
                 list.appendChild(dayCard);
-                
                 const coords = cityCoords[day.location] || [34.69, 135.50];
                 fetchWeatherWithRetry(coords[0], coords[1], index);
-
-                new Sortable(document.getElementById(`list-${index}`), {
-                    animation: 150,
-                    handle: '.cursor-move',
-                    ghostClass: 'drag-ghost'
-                });
+                new Sortable(document.getElementById(`list-${index}`), { animation: 150, handle: '.cursor-move', ghostClass: 'drag-ghost' });
             });
             lucide.createIcons();
         }
 
-        window.addItem = function(dayIndex) {
-            const newItem = prompt("請輸入景點名稱：");
-            if (newItem) {
-                initialData[dayIndex].items.push(newItem);
-                renderApp();
-            }
+        window.addItem = function(idx) {
+            const res = prompt("景點名稱：");
+            if (res) { initialData[idx].items.push(res); renderApp(); }
         };
-
-        window.removeItem = function(dayIndex, itemIndex) {
-            if (confirm("確定要刪除此景點嗎？")) {
-                initialData[dayIndex].items.splice(itemIndex, 1);
-                renderApp();
-            }
+        window.removeItem = function(dIdx, iIdx) {
+            if (confirm("確定刪除？")) { initialData[dIdx].items.splice(iIdx, 1); renderApp(); }
         };
-
         document.addEventListener('DOMContentLoaded', renderApp);
     </script>
 </body>
