@@ -46,7 +46,7 @@
     </main>
 
     <footer class="text-center mt-10 text-gray-500 text-sm">
-        <p>© 2026 Family Trip Planner - 天氣與景點建議自動更新</p>
+        <p>© 2026 Family Trip Planner - 氣象模式：即時動態預報</p>
     </footer>
 
     <script>
@@ -54,14 +54,14 @@
             { date: "2026-02-11", day: "Day 1", city: "大阪", location: "Osaka", mainPath: "桃園 → 大阪", items: ["關西機場", "大阪市區散策"], specialTip: "抵達首日，關西機場海邊風大，出關後體感溫度較低。" },
             { date: "2026-02-12", day: "Day 2", city: "下關", location: "Shimonoseki", mainPath: "下關、防府", items: ["唐戶市場", "海峽夢之塔", "關門隧道步道", "防府天滿宮"], specialTip: "關門海峽地區海風強勁，建議穿著防風外套。" },
             { date: "2026-02-13", day: "Day 3", city: "宮島", location: "Hatsukaichi", mainPath: "岩國、宮島", items: ["錦帶橋", "岩國城", "嚴島神社", "宮島表參道商店街"], specialTip: "宮島往返需搭船，海上風力強且寒冷，請務必備妥帽子與圍巾。" },
-            { date: "2026-02-14", day: "Day 4", city: "廣島", location: "Hiroshima", mainPath: "廣島", items: ["原爆圓頂", "和平紀念公園", "廣島城"], specialTip: "廣島市區 2 月氣溫溫差大，早晚需注意保暖。" },
+            { date: "2026-02-14", day: "Day 4", city: "廣島", location: "Hiroshima", mainPath: "廣島", items: ["原爆圓頂", "和平紀念公園", "廣島城"], specialTip: "廣島市區今日氣溫參考預報，早晚需注意保暖。" },
             { date: "2026-02-15", day: "Day 5", city: "大久野島", location: "Takehara", mainPath: "大久野島、竹原", items: ["兔子島", "竹原街景保存地區"], specialTip: "餵兔子時手部較容易冷，建議備好手套與暖暖包。" },
             { date: "2026-02-16", day: "Day 6", city: "尾道", location: "Onomichi", mainPath: "尾道、鞆之浦", items: ["千光寺", "貓之細道", "鞆之浦"], specialTip: "山頂風大，要注意頭部保暖。" },
             { date: "2026-02-17", day: "Day 7", city: "豐島・直島", location: "Naoshima", mainPath: "豐島・直島", items: ["豐島美術館", "針工廠", "ANDO MUSEUM", "李禹煥美術館"], specialTip: "島上移動多步行，海邊溫差大，建議採用洋蔥式穿法。" },
             { date: "2026-02-18", day: "Day 8", city: "倉敷", location: "Kurashiki", mainPath: "倉敷、吉備津", items: ["倉敷美觀地區", "吉備津神社","瀨戶大橋","鷲羽山"], specialTip: "鷲羽山風勢極強，建議帽子需有束帶避免被吹走。" },
             { date: "2026-02-19", day: "Day 9", city: "姬路、備前、神戶", location: "Himeji", mainPath: "姬路、備前、神戶", items: ["明石海峽大橋", "摩耶山掬星台","舊閑谷學校","天津神社"], specialTip: "摩耶山海拔高且夜晚極冷，請穿著最厚實的保暖衣物。" },
             { date: "2026-02-20", day: "Day 10", city: "神戶", location: "Kobe", mainPath: "神戶", items: ["神戶舊居留地"], specialTip: "港邊建築間常有強勁切風，長圍巾是防風好幫手。" },
-            { date: "2026-02-21", day: "Day 11", city: "大阪", location: "Osaka", mainPath: "大阪", items: ["心齋橋", "道頓堀"], specialTip: "室內外溫差與隨身物品請多留意。" }
+            { date: "2026-02-21", day: "Day 11", city: "大阪", location: "Osaka", mainPath: "大阪", items: ["心齋橋", "道頓堀"], specialTip: "最後採買日，市區室內外溫差較大。" }
         ];
 
         const cityCoords = {
@@ -71,22 +71,19 @@
             "Kobe": [34.69, 135.18]
         };
 
-        function getWeatherIcon(code) {
-            const map = { 0: 'sun', 1: 'cloud-sun', 2: 'cloud', 3: 'cloud', 45: 'cloud-fog', 51: 'cloud-rain', 61: 'cloud-rain', 71: 'snowflake' };
-            return map[code] || 'cloud';
-        }
-
-        function displayWeather(dayId, minT, maxT, code) {
+        function displayWeather(dayId, minT, maxT, isForecast) {
             const container = document.getElementById(`weather-${dayId}`);
             if (!container) return;
-            const icon = getWeatherIcon(code);
             const specialAdvice = initialData[dayId].specialTip;
 
             container.innerHTML = `
                 <div class="flex flex-col gap-2 bg-white p-3 rounded-lg border border-blue-100 shadow-sm">
                     <div class="flex items-center gap-3">
-                        <i data-lucide="${icon}" class="text-blue-500 w-6 h-6"></i>
-                        <span class="text-sm font-bold text-gray-800">${minT}°C - ${maxT}°C</span>
+                        <i data-lucide="cloud-sun" class="text-blue-500 w-5 h-5"></i>
+                        <span class="text-sm font-bold text-gray-800">${minT}°C ~ ${maxT}°C</span>
+                        <span class="text-[10px] ${isForecast ? 'text-green-600 bg-green-50' : 'text-gray-400 bg-gray-100'} px-1 rounded">
+                            ${isForecast ? '即時預報' : '參考溫'}
+                        </span>
                     </div>
                     <div class="text-[11px] leading-relaxed text-orange-600 font-medium flex gap-1 items-start">
                         <i data-lucide="info" class="w-3 h-3 mt-0.5 flex-shrink-0"></i>
@@ -97,26 +94,40 @@
             lucide.createIcons();
         }
 
-        // 修正後的氣溫抓取邏輯：使用歷史氣候數據 (Archive) 
         async function fetchWeather(lat, lon, dayId) {
-            const targetDate = initialData[dayId].date;
-            // 將 2026 年對應到 2024 年的同一天，以獲得真實的歷史參考溫度
-            const historicalDate = targetDate.replace("2026", "2024");
+            const today = new Date();
+            const targetDateStr = initialData[dayId].date;
+            const targetDate = new Date(targetDateStr);
             
-            const url = `https://archive-api.open-meteo.com/v1/archive?latitude=${lat}&longitude=${lon}&start_date=${historicalDate}&end_date=${historicalDate}&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=Asia%2FTokyo`;
+            // 計算天數差
+            const timeDiff = targetDate.getTime() - today.getTime();
+            const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+            let url;
+            let isForecast = false;
+
+            // 既然今天是 2026/02/09，對於 2/11 之後的日期都在 14 天內
+            if (daysDiff >= -1 && daysDiff <= 14) {
+                // 使用即時預報 API
+                url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FTokyo&start_date=${targetDateStr}&end_date=${targetDateStr}`;
+                isForecast = true;
+            } else {
+                // 日期太遠則回退到歷史參考
+                const historicalDate = targetDateStr.replace("2026", "2024");
+                url = `https://archive-api.open-meteo.com/v1/archive?latitude=${lat}&longitude=${lon}&start_date=${historicalDate}&end_date=${historicalDate}&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FTokyo`;
+            }
             
             try {
                 const response = await fetch(url);
                 const data = await response.json();
-                if (data.daily) {
-                    const maxT = Math.round(data.daily.temperature_2m_max[0]);
-                    const minT = Math.round(data.daily.temperature_2m_min[0]);
-                    const code = data.daily.weathercode[0];
-                    displayWeather(dayId, minT, maxT, code);
+                const daily = data.daily;
+                if (daily && daily.temperature_2m_min) {
+                    displayWeather(dayId, Math.round(daily.temperature_2m_min[0]), Math.round(daily.temperature_2m_max[0]), isForecast);
+                } else {
+                    throw new Error("No data");
                 }
             } catch (e) {
-                // 失敗時顯示合理預設值
-                displayWeather(dayId, 5, 12, 1);
+                displayWeather(dayId, 5, 13, false); 
             }
         }
 
@@ -174,16 +185,10 @@
 
         window.addItem = function(idx) {
             const res = prompt("景點名稱：");
-            if (res) { 
-                initialData[idx].items.push(res); 
-                renderApp(); 
-            }
+            if (res) { initialData[idx].items.push(res); renderApp(); }
         };
         window.removeItem = function(dIdx, iIdx) {
-            if (confirm("確定刪除？")) { 
-                initialData[dIdx].items.splice(iIdx, 1); 
-                renderApp(); 
-            }
+            if (confirm("確定刪除？")) { initialData[dIdx].items.splice(iIdx, 1); renderApp(); }
         };
         document.addEventListener('DOMContentLoaded', renderApp);
     </script>
